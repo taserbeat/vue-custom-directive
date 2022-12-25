@@ -1,14 +1,28 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { DirectiveBinding, ref } from "vue";
 
 const username = ref<string>("");
 
 // v-forcus という名前でカスタムディレクティブが使用できる
 // QUESTION: 'mounted'プロパティを持つkとを型定義できない？
 const vForcus = {
-  mounted: (element: HTMLElement) => {
-    element.focus(); // 指定したエレメントにフォーカスを当てる
+  mounted: (element: HTMLElement, binding: DirectiveBinding) => {
+    // 指定したエレメントにフォーカスを当てる
+    element.focus();
+
+    if (binding.modifiers.alert) {
+      element.style.backgroundColor = "pink";
+    }
   },
+};
+
+const onSubmit = (event: Event) => {
+  // Save Datnボタンでページがリロードされるのを抑止する
+  // @click.preventでも実現が可能
+  event.preventDefault();
+
+  console.log(`username: ${username.value}`);
+  console.log("submit!");
 };
 </script>
 
@@ -16,12 +30,20 @@ const vForcus = {
   <form>
     <div class="form-control">
       <label for="user-name">Your Name</label>
-      <input id="user-name" name="user-name" type="text" v-forcus />
+      <input
+        v-model="username"
+        id="user-name"
+        name="user-name"
+        type="text"
+        v-forcus.alert
+      />
     </div>
+
     <div class="form-control">
       <label for="age">Your Age</label>
       <input id="age" name="age" type="number" />
     </div>
+
     <div class="form-control">
       <label for="from">Where Are you from?</label>
       <select id="from" name="from">
@@ -30,16 +52,19 @@ const vForcus = {
         <option value="others">Others</option>
       </select>
     </div>
+
     <div class="form-control">
       <h2>What are you interested in?</h2>
       <div>
         <input id="interest-react" name="interest" type="checkbox" />
         <label for="interest-react">React.js</label>
       </div>
+
       <div>
         <input id="interest-vue" name="interest" type="checkbox" />
         <label for="interest-vue">Vue.js</label>
       </div>
+
       <div>
         <input id="interest-angular" name="interest" type="checkbox" />
         <label for="interest-angular">Angular.js</label>
@@ -47,21 +72,25 @@ const vForcus = {
     </div>
     <div class="form-control">
       <h2>How do you learn?</h2>
+
       <div>
         <input id="how-video" name="how" type="radio" />
         <label for="how-video">Video Courses</label>
       </div>
+
       <div>
         <input id="how-books" name="how" type="radio" />
         <label for="how-books">Books</label>
       </div>
+
       <div>
         <input id="how-other" name="how" type="radio" />
         <label for="how-other">Other</label>
       </div>
     </div>
+
     <div>
-      <button>Save Data</button>
+      <button @click="onSubmit">Save Data</button>
     </div>
   </form>
 </template>
