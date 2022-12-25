@@ -1,10 +1,22 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from "vue";
+
+const username = ref<string>("");
+
+// v-forcus という名前でカスタムディレクティブが使用できる
+// QUESTION: 'mounted'プロパティを持つkとを型定義できない？
+const vForcus = {
+  mounted: (element: HTMLElement) => {
+    element.focus(); // 指定したエレメントにフォーカスを当てる
+  },
+};
+</script>
 
 <template>
   <form>
     <div class="form-control">
       <label for="user-name">Your Name</label>
-      <input id="user-name" name="user-name" type="text" />
+      <input id="user-name" name="user-name" type="text" v-forcus />
     </div>
     <div class="form-control">
       <label for="age">Your Age</label>
