@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { DirectiveBinding, ref, watch } from "vue";
 
+import Rating from "./Rating.vue";
+
 const username = ref<string>("");
 const from = ref<string>("japan");
 const interest = ref([]);
 const radios = ref([]);
+
+const ratings = ref<string>("");
 
 // v-forcus という名前でカスタムディレクティブが使用できる
 // QUESTION: 'mounted'プロパティを持つkとを型定義できない？
@@ -27,6 +31,8 @@ const onSubmit = (event: Event) => {
   console.log(`username: ${username.value}`);
   console.log(`from: ${from.value}`);
   console.log(`radios: ${radios.value}`);
+
+  console.log(`ratings: ${ratings.value}`);
 
   interest.value = [];
   radios.value = [];
@@ -130,6 +136,10 @@ const onSubmit = (event: Event) => {
         />
         <label for="how-other">Other</label>
       </div>
+    </div>
+
+    <div>
+      <Rating v-model="ratings" />
     </div>
 
     <div>
